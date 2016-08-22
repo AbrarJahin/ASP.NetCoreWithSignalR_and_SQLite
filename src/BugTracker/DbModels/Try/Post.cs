@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BugTracker.DbModels
+namespace BugTracker.DbModels.Try
 {
     public class Post
     {

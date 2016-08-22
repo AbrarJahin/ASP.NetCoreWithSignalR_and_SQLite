@@ -56,6 +56,8 @@ namespace BugTracker
             {
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
+                //Adding Seeder Data
+                AddTestData(app.ApplicationServices.GetService<McpDbContext>());
             }
             else
             {
@@ -72,6 +74,29 @@ namespace BugTracker
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        private static void AddTestData(McpDbContext context)
+        {
+            var testUser1 = new DbModels.Try.User
+            {
+                Id = "abc123",
+                FirstName = "Luke",
+                LastName = "Skywalker"
+            };
+
+            context.Users.Add(testUser1);
+
+            var testPost1 = new DbModels.Try.Post
+            {
+                Id = "def234",
+                UserId = testUser1.Id,
+                Content = "What a piece of junk!"
+            };
+
+            context.Posts.Add(testPost1);
+
+            context.SaveChanges();
         }
     }
 }
