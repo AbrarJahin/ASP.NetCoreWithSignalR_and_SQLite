@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.AspNetCore.SignalR.Infrastructure;
 
 namespace BugTracker
 {
@@ -37,6 +32,11 @@ namespace BugTracker
         {
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
+            //Add DB Context
+            var connectionStringBuilder = new Microsoft.Data.Sqlite.SqliteConnectionStringBuilder { DataSource = "mcp.db" };
+            var connectionString = connectionStringBuilder.ToString();
+            services.AddDbContext<McpDbContext>(options =>
+                options.UseSqlite(connectionString));
 
             services.AddMvc();
             services.AddSignalR(options => { options.Hubs.EnableDetailedErrors = true; });
