@@ -246,3 +246,7 @@ ModelManifest.xml
 
 # Migration Files
 src/BugTracker/Migrations/*
+
+# Uploaded Files
+src/BugTracker/Migrations/*
+src/BugTracker/wwwroot/uploads/*
