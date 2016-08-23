@@ -44,8 +44,9 @@ namespace BugTracker.api
                 Id = u.Id,
                 UserId = u.UserId,
                 Title = u.Title,
-                Descriptions = u.Descriptions.Select(p => p.BulletinId),
-                Images = u.Images.Select(p => p.BulletinId)
+                Descriptions = u.Descriptions.Select(p => p.Text),
+                Images = u.Images.Select(p => p.Name),
+                BaseUrl = "123.123.123.123"
             });
 
             return Ok(response);
