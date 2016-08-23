@@ -8,8 +8,6 @@ using Microsoft.AspNetCore.Http;
 using BugTracker.Model.ViewModels;
 using Microsoft.Net.Http.Headers;
 using System.IO;
-using Microsoft.Extensions.PlatformAbstractions;
-using Microsoft.AspNetCore.Hosting;
 
 namespace BugTracker.api
 {
@@ -26,7 +24,7 @@ namespace BugTracker.api
             _context = context;
             //_environment = environment;
             var location = System.Reflection.Assembly.GetEntryAssembly().Location;
-            uploadDirectory = System.IO.Path.GetDirectoryName(location) + $@"\{"uploads"}";
+            uploadDirectory = Path.GetDirectoryName(location) + $@"\{"uploads"}";
             //System.IO.Directory.CreateDirectory(uploadDirectory);      //Should be in startup
         }
 
@@ -70,7 +68,7 @@ namespace BugTracker.api
             foreach (var file in image)
             {
                 string fileName = Path.GetFileNameWithoutExtension(file.FileName);
-                string extention = System.IO.Path.GetExtension(file.FileName);
+                string extention = Path.GetExtension(file.FileName);
                 var fileData = ContentDispositionHeaderValue
                                 .Parse(file.ContentDisposition);
 
@@ -95,7 +93,7 @@ namespace BugTracker.api
             _context.Bulletin.Add(bulletin);
             _context.SaveChanges();
 
-            return Ok(data);
+            return Ok(bulletin);
         }
 
         //[HttpPost]
