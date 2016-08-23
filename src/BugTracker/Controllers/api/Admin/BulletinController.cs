@@ -9,6 +9,7 @@ using BugTracker.Model.ViewModels;
 using Microsoft.Net.Http.Headers;
 using System.IO;
 using Microsoft.Extensions.PlatformAbstractions;
+using Microsoft.AspNetCore.Hosting;
 
 namespace BugTracker.api
 {
@@ -16,12 +17,17 @@ namespace BugTracker.api
     public class BulletinController : Controller
     {
         private readonly McpDbContext _context;
-        private ApplicationEnvironment _environment;
+        //private ApplicationEnvironment _environment;
+        private string uploadDirectory;
 
-        public BulletinController(McpDbContext context, ApplicationEnvironment environment)
+        public BulletinController(McpDbContext context) //, ApplicationEnvironment environment
         {
+            
             _context = context;
-            _environment = environment;
+            //_environment = environment;
+            var location = System.Reflection.Assembly.GetEntryAssembly().Location;
+            uploadDirectory = System.IO.Path.GetDirectoryName(location) + $@"\{"uploads"}";
+            //System.IO.Directory.CreateDirectory(uploadDirectory);      //Should be in startup
         }
 
         [HttpGet]
@@ -57,28 +63,32 @@ namespace BugTracker.api
 
             //string filename1 = _environment.WebRootPath;
 
+            List<Image> bulletinImages = new List<Image>();
             string path = Directory.GetCurrentDirectory();
 
             foreach (var file in image)
             {
-                var filename = ContentDispositionHeaderValue
-                                .Parse(file.ContentDisposition)
-                                .FileName
-                                .Trim('"');
-                //filename = _environment.WebRootPath + $@"\{filename}";
-                //size += file.Length;
-                //using (FileStream fs = System.IO.File.Create(filename))
-                //{
-                //    file.CopyTo(fs);
-                //    fs.Flush();
-                //}
+                string fileName = Path.GetFileNameWithoutExtension(file.FileName);
+                string extention = System.IO.Path.GetExtension(file.FileName);
+                var fileData = ContentDispositionHeaderValue
+                                .Parse(file.ContentDisposition);
+
+                var filename = file.FileName;//fileData.FileName.Trim('"');
+                bulletinImages.Add(new Image { Name = filename });
+                filename = uploadDirectory + $@"\{filename}";
+                //file.Length;
+                using (FileStream fs = System.IO.File.Create(filename))
+                {
+                    file.CopyTo(fs);
+                    fs.Flush();
+                }
             }
 
             Bulletin bulletin = new Bulletin {
                 UserId = data.user_id,
                 Title = data.title,
-                Descriptions = bulletinDescription
-                
+                Descriptions = bulletinDescription,
+                Images = bulletinImages
             };
 
             _context.Bulletin.Add(bulletin);
