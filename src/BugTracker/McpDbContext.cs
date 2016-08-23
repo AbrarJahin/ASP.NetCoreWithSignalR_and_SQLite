@@ -13,10 +13,13 @@ namespace BugTracker
             //context.Database.Migrate();
         }
 
-        public DbSet<User> Users { get; set; }
-
-        public DbSet<Post> Posts { get; set; }
-
-        public DbSet<Bulletin> Mcp { get; set; }
+        //List of Models
+        //Dummy Data
+            public DbSet<User> Users { get; set; }
+            public DbSet<Post> Posts { get; set; }
+        //Real Data
+            public DbSet<Image> Image { get; set; }
+            public DbSet<Description> Description { get; set; }
+            public DbSet<Bulletin> Bulletin { get; set; }
     }
 }

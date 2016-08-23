@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace BugTracker.Controllers
+namespace BugTracker.Controllers.api
 {
     [Route("api/[controller]")]
     public class UsersController : Controller

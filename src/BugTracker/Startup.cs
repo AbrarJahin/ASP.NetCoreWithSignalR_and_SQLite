@@ -16,7 +16,7 @@ namespace BugTracker
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
-
+            
             if (env.IsDevelopment())
             {
                 // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
@@ -35,6 +35,9 @@ namespace BugTracker
             //Add DB Context
             var connectionStringBuilder = new Microsoft.Data.Sqlite.SqliteConnectionStringBuilder { DataSource = "mcp.db" };
             var connectionString = connectionStringBuilder.ToString();
+
+            
+            
             services.AddDbContext<McpDbContext>(options =>
                 options.UseSqlite(connectionString));
 
@@ -57,7 +60,7 @@ namespace BugTracker
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
                 //Adding Seeder Data
-                AddTestData(app.ApplicationServices.GetService<McpDbContext>());
+               // AddTestData(app.ApplicationServices.GetService<McpDbContext>());
             }
             else
             {
