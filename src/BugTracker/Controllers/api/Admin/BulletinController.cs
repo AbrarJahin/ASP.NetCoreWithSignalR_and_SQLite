@@ -25,7 +25,7 @@ namespace BugTracker.api
             _context = context;
             _environment = environment;
             var location = System.Reflection.Assembly.GetEntryAssembly().Location;
-            uploadDirectory = _environment.WebRootPath + $@"\{"uploads"}";
+            uploadDirectory = _environment.WebRootPath + $@"/{"uploads"}";
             Directory.CreateDirectory(uploadDirectory);      //Should be in startup
         }
 
@@ -79,7 +79,7 @@ namespace BugTracker.api
 
                 bulletinImages.Add(new Image { Name = filename });
 
-                var serverFile = uploadDirectory + $@"\{filename}";
+                var serverFile = uploadDirectory + $@"/{filename}";
                 //file.Length;
                 using (FileStream fileStream = System.IO.File.Create(serverFile))
                 {
