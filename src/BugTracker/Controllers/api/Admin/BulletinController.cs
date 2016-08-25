@@ -44,7 +44,7 @@ namespace BugTracker.api
                 Title = u.Title,
                 Descriptions = u.Descriptions.Select(p => p.Text),
                 Images = u.Images.Select(p => p.Name),
-                BaseUrl = "123.123.123.123"
+                BaseUrl = "http:/localhost/uploads/"
             });
 
             return Ok(response);
@@ -72,7 +72,7 @@ namespace BugTracker.api
 
                 var filename = ( data.user_id
                                 + "_"
-                                + Convert.ToBase64String(Guid.NewGuid().ToByteArray()).Substring(0, 15)
+                                + Guid.NewGuid().ToString()
                                 + "_"
                                 + fileName
                                 +extention).Trim('"');
@@ -97,7 +97,7 @@ namespace BugTracker.api
 
             _context.Bulletin.Add(bulletin);
             _context.SaveChanges();
-
+            
             return Ok(bulletin);
         }
 

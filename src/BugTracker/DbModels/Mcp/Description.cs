@@ -10,6 +10,6 @@ namespace BugTracker.DbModels.Mcp
         public int Id { get; set; }
         public int BulletinId { get; set; }
         public string Text { get; set; }
-        public Bulletin Bulletin { get; set; }
+        //public virtual Bulletin Bulletin { get; set; }
     }
 }
