@@ -75,7 +75,7 @@ namespace McpSmyrilLine
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
                 //Adding Seeder Data
-               // AddTestData(app.ApplicationServices.GetService<McpDbContext>());
+                AddTestData(app.ApplicationServices.GetService<McpDbContext>());
             }
             else
             {
@@ -96,25 +96,25 @@ namespace McpSmyrilLine
 
         private static void AddTestData(McpDbContext context)
         {
-            var testUser1 = new DbModels.Try.User
-            {
-                Id = "abc123",
-                FirstName = "Luke",
-                LastName = "Skywalker"
-            };
+            //var testUser1 = new DbModels.Try.User
+            //{
+            //    Id = "abc123",
+            //    FirstName = "Luke",
+            //    LastName = "Skywalker"
+            //};
 
-            context.Users.Add(testUser1);
+            //context.Users.Add(testUser1);
 
-            var testPost1 = new DbModels.Try.Post
-            {
-                Id = "def234",
-                UserId = testUser1.Id,
-                Content = "What a piece of junk!"
-            };
+            //var testPost1 = new DbModels.Try.Post
+            //{
+            //    Id = "def234",
+            //    UserId = testUser1.Id,
+            //    Content = "What a piece of junk!"
+            //};
 
-            context.Posts.Add(testPost1);
+            //context.Posts.Add(testPost1);
 
-            context.SaveChanges();
+            //context.SaveChanges();
         }
     }
 }

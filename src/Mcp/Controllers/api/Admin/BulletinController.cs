@@ -34,6 +34,7 @@ namespace McpSmyrilLine.api
             var bulletins = await _context.Bulletin
                 .Include(u => u.Descriptions)
                 .Include(u => u.Images)
+                .Include(u => u.BulletinTimes)
                 .ToArrayAsync();
 
             var response = bulletins.Select(u => new
@@ -43,7 +44,8 @@ namespace McpSmyrilLine.api
                 Title = u.Title,
                 Descriptions = u.Descriptions.Select(p => p.Text),
                 Images = u.Images.Select(p => p.Name),
-                BaseUrl = "http:/localhost/uploads/"
+                SendTimes = u.BulletinTimes.Select(p => p.SendTime),
+                BaseUrl = "/uploads/"
             });
 
             return Ok(response);
@@ -52,11 +54,18 @@ namespace McpSmyrilLine.api
         [HttpPost]
         public IActionResult Insert(BulletinViewModel data, ICollection<IFormFile> image)
         {
-            List<Description> bulletinDescription = new List<Description>();
+            List<Description> bulletinDescription   = new List<Description>();
+            List<BulletinTime> bulletinTime         = new List<BulletinTime>();
+            bulletinTime.Add(new BulletinTime { Id = 1 });
 
             foreach (var description in data.text)
             {
-                bulletinDescription.Add(new Description{ Text = description });
+                bulletinDescription.Add(new Description { Text = description });
+            }
+
+            foreach (var send_time in data.send_time)
+            {
+                bulletinTime.Add(new BulletinTime { SendTime = send_time });
             }
 
             //string filename1 = _environment.WebRootPath;
