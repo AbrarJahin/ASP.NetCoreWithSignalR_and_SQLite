@@ -56,7 +56,6 @@ namespace McpSmyrilLine.api
         {
             List<Description> bulletinDescription   = new List<Description>();
             List<BulletinTime> bulletinTime         = new List<BulletinTime>();
-            bulletinTime.Add(new BulletinTime { Id = 1 });
 
             foreach (var description in data.text)
             {
@@ -67,6 +66,7 @@ namespace McpSmyrilLine.api
             {
                 bulletinTime.Add(new BulletinTime { SendTime = send_time });
             }
+            //bulletinTime.Add(new BulletinTime { Id = 1 });
 
             //string filename1 = _environment.WebRootPath;
 
@@ -100,7 +100,8 @@ namespace McpSmyrilLine.api
                 UserId = data.user_id,
                 Title = data.title,
                 Descriptions = bulletinDescription,
-                Images = bulletinImages
+                Images = bulletinImages,
+                BulletinTimes= bulletinTime
             };
 
             _context.Bulletin.Add(bulletin);
