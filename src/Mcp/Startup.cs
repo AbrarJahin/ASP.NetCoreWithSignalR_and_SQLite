@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -36,8 +37,19 @@ namespace McpSmyrilLine
             var connectionStringBuilder = new Microsoft.Data.Sqlite.SqliteConnectionStringBuilder { DataSource = "mcp.db" };
             var connectionString = connectionStringBuilder.ToString();
 
-            
-            
+            ///////////////Add Cors
+            var corsBuilder = new CorsPolicyBuilder();
+            corsBuilder.AllowAnyHeader();
+            corsBuilder.AllowAnyMethod();
+            corsBuilder.AllowAnyOrigin();
+            corsBuilder.AllowCredentials();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", corsBuilder.Build());
+            });
+            ///////////////End Cors
+
             services.AddDbContext<McpDbContext>(options =>
                 options.UseSqlite(connectionString));
 
@@ -50,6 +62,9 @@ namespace McpSmyrilLine
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            //Configure Cors
+            app.UseCors("AllowAll");
 
             app.UseSignalR();
 

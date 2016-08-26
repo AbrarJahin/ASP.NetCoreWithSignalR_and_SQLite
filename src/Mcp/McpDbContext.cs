@@ -18,8 +18,9 @@ namespace McpSmyrilLine
             public DbSet<User> Users { get; set; }
             public DbSet<Post> Posts { get; set; }
         //Real Data
-            public DbSet<Image> Image { get; set; }
-            public DbSet<Description> Description { get; set; }
-            public DbSet<Bulletin> Bulletin { get; set; }
+            public DbSet<Image>         Image           { get; set; }
+            public DbSet<Description>   Description     { get; set; }
+            public DbSet<Bulletin>      Bulletin        { get; set; }
+            public DbSet<BulletinTime>  BulletinTime    { get; set; }
     }
 }

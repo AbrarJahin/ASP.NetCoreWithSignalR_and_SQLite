@@ -1,13 +1,8 @@
-﻿using McpSmyrilLine.DbModels.Mcp;
-using Microsoft.AspNet.Http;
-using System;
+﻿using Microsoft.AspNet.Http;
 using System.Collections.Generic;
-
 
 namespace McpSmyrilLine.Model.ViewModels
 {
-    using System;
-    using System.IO;
     public class BulletinViewModel
     {
         public int user_id { get; set; }
