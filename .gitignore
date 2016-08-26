@@ -249,4 +249,4 @@ src/BugTracker/Migrations/*
 
 # Uploaded Files
 src/BugTracker/Migrations/*
-src/BugTracker/wwwroot/uploads/*
+src/Mcp/wwwroot/uploads/*
