@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BugTracker.DbModels.Try
+namespace McpSmyrilLine.DbModels.Try
 {
     public class User
     {

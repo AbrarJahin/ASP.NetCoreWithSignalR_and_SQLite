@@ -1,7 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace BugTracker.DbModels.Mcp
+namespace McpSmyrilLine.DbModels.Mcp
 {
     public class Bulletin
     {

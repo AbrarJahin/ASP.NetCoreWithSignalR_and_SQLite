@@ -1,17 +1,16 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using BugTracker.DbModels.Mcp;
+using McpSmyrilLine.DbModels.Mcp;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
-using BugTracker.Model.ViewModels;
-using Microsoft.Net.Http.Headers;
+using McpSmyrilLine.Model.ViewModels;
 using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using System;
 
-namespace BugTracker.api
+namespace McpSmyrilLine.api
 {
     [Route("api/bulletin/[action]")]
     public class BulletinController : Controller
@@ -100,36 +99,6 @@ namespace BugTracker.api
             
             return Ok(bulletin);
         }
-
-        //[HttpPost]
-        //public async Task<IActionResult> Insert(IFormCollection data)
-        //{
-        //    ICollection<Description> bulletinDescription = null;
-        //    ICollection<Image> bulletinImage = null;
-        //    //Description
-        //    Bulletin savableBulletin = new Bulletin();
-        //    foreach (var description in data)
-        //    {
-        //        if (description.Key.Equals("user_id"))
-        //        {
-        //            System.Pa
-        //            savableBulletin.UserId = description.Value;
-        //        }
-        //    }
-        //    //Images
-        //    foreach (string image in data["image"])
-        //    {
-        //        Image bul_image = new Image { Name = "asd" };
-        //        bulletinImage.Add(bul_image);
-        //    }
-
-        //    /*
-        //    Bulletin bultn = new Bulletin { UserId = , Title =  };
-        //    _context.Bulletin.Add();
-        //    await _context.SaveChangesAsync();
-        //    */
-        //    return Ok(data);
-        //}
 
         //[HttpPut]
         //public Update(int bulletinID)

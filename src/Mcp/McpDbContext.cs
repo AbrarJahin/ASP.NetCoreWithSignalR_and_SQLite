@@ -1,8 +1,8 @@
-﻿using BugTracker.DbModels.Try;
-using BugTracker.DbModels.Mcp;
+﻿using McpSmyrilLine.DbModels.Try;
+using McpSmyrilLine.DbModels.Mcp;
 using Microsoft.EntityFrameworkCore;
 
-namespace BugTracker
+namespace McpSmyrilLine
 {
     public class McpDbContext : DbContext
     {

@@ -1,12 +1,12 @@
-﻿using BugTracker.Hubs;
-using BugTracker.Model;
+﻿using McpSmyrilLine.Hubs;
+using McpSmyrilLine.Model;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Infrastructure;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace BugTracker.api
+namespace McpSmyrilLine.api
 {
     [Route("api/bugs/[action]")]
     public class BugsController : Controller

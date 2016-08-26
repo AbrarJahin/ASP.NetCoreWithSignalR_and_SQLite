@@ -1,10 +1,10 @@
-﻿using BugTracker.DbModels.Mcp;
+﻿using McpSmyrilLine.DbModels.Mcp;
 using Microsoft.AspNet.Http;
 using System;
 using System.Collections.Generic;
 
 
-namespace BugTracker.Model.ViewModels
+namespace McpSmyrilLine.Model.ViewModels
 {
     using System;
     using System.IO;

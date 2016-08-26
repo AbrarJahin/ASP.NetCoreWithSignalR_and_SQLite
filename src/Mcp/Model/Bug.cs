@@ -1,4 +1,4 @@
-﻿namespace BugTracker.Model
+﻿namespace McpSmyrilLine.Model
 {
     public class Bug
     {

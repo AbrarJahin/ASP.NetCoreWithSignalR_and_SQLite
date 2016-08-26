@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BugTracker.Model
+namespace McpSmyrilLine.Model
 {
     public class BugsRepository : IBugsRepository
     {
