@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.AspNetCore.SignalR;
-using Microsoft.AspNetCore.SignalR.Infrastructure;
 
 namespace BugTracker
 {
@@ -21,7 +16,7 @@ namespace BugTracker
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables();
-
+            
             if (env.IsDevelopment())
             {
                 // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
@@ -37,6 +32,14 @@ namespace BugTracker
         {
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
+            //Add DB Context
+            var connectionStringBuilder = new Microsoft.Data.Sqlite.SqliteConnectionStringBuilder { DataSource = "mcp.db" };
+            var connectionString = connectionStringBuilder.ToString();
+
+            
+            
+            services.AddDbContext<McpDbContext>(options =>
+                options.UseSqlite(connectionString));
 
             services.AddMvc();
             services.AddSignalR(options => { options.Hubs.EnableDetailedErrors = true; });
@@ -56,6 +59,8 @@ namespace BugTracker
             {
                 app.UseDeveloperExceptionPage();
                 app.UseBrowserLink();
+                //Adding Seeder Data
+               // AddTestData(app.ApplicationServices.GetService<McpDbContext>());
             }
             else
             {
@@ -72,6 +77,29 @@ namespace BugTracker
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        private static void AddTestData(McpDbContext context)
+        {
+            var testUser1 = new DbModels.Try.User
+            {
+                Id = "abc123",
+                FirstName = "Luke",
+                LastName = "Skywalker"
+            };
+
+            context.Users.Add(testUser1);
+
+            var testPost1 = new DbModels.Try.Post
+            {
+                Id = "def234",
+                UserId = testUser1.Id,
+                Content = "What a piece of junk!"
+            };
+
+            context.Posts.Add(testPost1);
+
+            context.SaveChanges();
         }
     }
 }

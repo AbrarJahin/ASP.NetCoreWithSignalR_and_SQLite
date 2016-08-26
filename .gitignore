@@ -243,3 +243,10 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+
+# Migration Files
+src/BugTracker/Migrations/*
+
+# Uploaded Files
+src/BugTracker/Migrations/*
+src/Mcp/wwwroot/uploads/*
