@@ -55,34 +55,33 @@ namespace McpSmyrilLine.api
         }
 
         [HttpPost]
-        public IActionResult Insert(BulletinViewModel data, ICollection<IFormFile> image)
+        public async Task<IActionResult> Insert(BulletinViewModel data, ICollection<IFormFile> image)
         {
             bool is_immediate_bulletin;
             List<Description> bulletinDescription   = new List<Description>();
             List<BulletinTime> bulletinTime         = new List<BulletinTime>();
 
-            foreach (var description in data.text)
+            if(data.text.Length>0)
             {
-                bulletinDescription.Add(new Description { Text = description });
+                foreach (var description in data.text)
+                {
+                    bulletinDescription.Add(new Description { Text = description });
+                }
             }
 
-            if(data.send_time.Length>0)
+            if (data.send_time.Length>0)
             {
                 is_immediate_bulletin = false;
+
+                foreach (var send_time in data.send_time)
+                {
+                    bulletinTime.Add(new BulletinTime { SendTime = send_time });
+                }
             }
             else
             {
                 is_immediate_bulletin = true;
             }
-
-            foreach (var send_time in data.send_time)
-            {
-                bulletinTime.Add(new BulletinTime { SendTime = send_time });
-            }
-            //if "data.send_time" contains 0 element, then the bulletin should be sent immediately,
-            //wtherwise will be sent by times mentioned
-
-            //string filename1 = _environment.WebRootPath;
 
             List<Image> bulletinImages = new List<Image>();
             string path = Directory.GetCurrentDirectory();
@@ -130,75 +129,89 @@ namespace McpSmyrilLine.api
             return Ok(bulletin);
         }
 
-        //[HttpPut]
-        //public IActionResult Update(BulletinViewModel data, ICollection<IFormFile> image)
-        //{
-        //    //db.People.RemoveRange(db.People.Where(x => x.State == "CA"));
-        //    //db.SaveChanges();
-        //    using (var db = new BloggingContext())
-        //    {
-        //        var blog = db.Blogs.Include(b => b.Posts).First();
-        //        db.Remove(blog);
-        //        db.SaveChanges();
-        //    }
+        [HttpPut]
+        public async Task<IActionResult> Update(BulletinViewModel data, ICollection<IFormFile> image)
+        {
+            List<Description> bulletinDescriptions = new List<Description>();
+            List<BulletinTime> bulletinTime = new List<BulletinTime>();
+            List<Image> bulletinImages = new List<Image>();
 
-        //    List<Description> bulletinDescription = new List<Description>();
-        //    List<BulletinTime> bulletinTime = new List<BulletinTime>();
+            string path = Directory.GetCurrentDirectory();
 
-        //    foreach (var description in data.text)
-        //    {
-        //        bulletinDescription.Add(new Description { Text = description });
-        //    }
+            var bulletin = _context.Bulletin
+                .Include(u => u.Descriptions)
+                .Include(u => u.Images)
+                .Include(u => u.BulletinTimes)
+                .Where(x=> x.Id ==data.id)
+                .SingleOrDefault();
 
-        //    foreach (var send_time in data.send_time)
-        //    {
-        //        bulletinTime.Add(new BulletinTime { SendTime = send_time });
-        //    }
-        //    //if "data.send_time" contains 0 element, then the bulletin should be sent immediately,
-        //    //wtherwise will be sent by times mentioned
+            //Single Data - Update
+            bulletin.UserId = data.user_id;
+            bulletin.CategoryName = data.category_name;
+            bulletin.Title = data.title;
 
-        //    //string filename1 = _environment.WebRootPath;
+            //List data - remove all previous data
+            bulletin.Descriptions.RemoveAll(x => x.BulletinId == data.id);
+            //Delete all files from Server
+            foreach (Image imageTodelete in bulletin.Images)
+            {
+                //File.Delete(imageTodelete.Name);
+                FileInfo file = new FileInfo(uploadDirectory + $@"/{imageTodelete.Name}");
+                file.Delete();  //As we surely know, file is there, if not, we should check that
+            }
+            bulletin.Images.RemoveAll(x=>x.BulletinId==data.id);
+            bulletin.BulletinTimes.RemoveAll(x => x.BulletinId == data.id);
 
-        //    List<Image> bulletinImages = new List<Image>();
-        //    string path = Directory.GetCurrentDirectory();
+            //Update List data - if there is anything available
+            if (data.text.Length > 0)
+            {
+                foreach (var description in data.text)
+                {
+                    bulletinDescriptions.Add(new Description { Text = description });
+                }
+            }
 
-        //    foreach (var file in image)
-        //    {
-        //        string fileName = Path.GetFileNameWithoutExtension(file.FileName);
-        //        string extention = Path.GetExtension(file.FileName);
+            if (data.send_time.Length > 0)
+            {
+                foreach (var send_time in data.send_time)
+                {
+                    bulletinTime.Add(new BulletinTime { SendTime = send_time });
+                }
+            }
 
-        //        var filename = (data.user_id
-        //                        + "_"
-        //                        + Guid.NewGuid().ToString()
-        //                        + "_"
-        //                        + fileName
-        //                        + extention).Trim('"');
+            foreach (var file in image)
+            {
+                string fileName = Path.GetFileNameWithoutExtension(file.FileName);
+                string extention = Path.GetExtension(file.FileName);
 
-        //        bulletinImages.Add(new Image { Name = filename });
+                var filename = (data.user_id
+                                + "_"
+                                + Guid.NewGuid().ToString()
+                                + "_"
+                                + fileName
+                                + extention).Trim('"');
 
-        //        var serverFile = uploadDirectory + $@"/{filename}";
-        //        //file.Length;
-        //        using (FileStream fileStream = System.IO.File.Create(serverFile))
-        //        {
-        //            file.CopyTo(fileStream);
-        //            fileStream.Flush();
-        //        }
-        //    }
+                bulletinImages.Add(new Image { Name = filename });
 
-        //    Bulletin bulletin = new Bulletin
-        //    {
-        //        UserId          = data.user_id,
-        //        Title           = data.title,
-        //        Descriptions    = bulletinDescription,
-        //        Images          = bulletinImages,
-        //        BulletinTimes   = bulletinTime
-        //    };
+                var serverFile = uploadDirectory + $@"/{filename}";
+                //file.Length;
+                using (FileStream fileStream = System.IO.File.Create(serverFile))
+                {
+                    file.CopyTo(fileStream);
+                    fileStream.Flush();
+                }
+            }
 
-        //    _context.Bulletin.Add(bulletin);
-        //    _context.SaveChanges();
+            //Update Data
+            bulletin.Descriptions = bulletinDescriptions;
+            bulletin.Images = bulletinImages;
+            bulletin.BulletinTimes = bulletinTime;
 
-        //    return Ok(bulletin);
-        //}
+            _context.Bulletin.Update(bulletin);
+            _context.SaveChanges();
+
+            return Ok(bulletin);
+        }
 
         //[HttpDelete]
         //public Delete(int bulletinID)

@@ -68,7 +68,7 @@ Default value (if u hit - `/api/bulletin/get`)
 
 ### Url (PUT)
 
-	/api/bulletin/insert
+	/api/bulletin/update
 
 ### Parameters like this-
 
