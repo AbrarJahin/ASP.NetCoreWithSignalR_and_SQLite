@@ -31,3 +31,46 @@ See the result directory with a platform specific dotnet command able to run the
 ## Error Solution
 
 Remove the `mcp.db` file and run again.
+
+
+
+#### Deployment Permission issue-
+
+chmod -R 777 /home/abrar/publish2/
+
+
+
+# API Details-
+
+## Insert-
+
+### Url (POST)
+
+	/api/bulletin/insert
+
+### Parameters like this-
+
+![alt tag](./documentation_img/insert.jpg)
+
+## Listing data-
+
+### Url (GET)
+
+	/api/bulletin/get?currentPageNo=1&pageSize=5
+
+Default value (if u hit - `/api/bulletin/get`)
+
+	currentPageNo=1
+	pageSize=20
+
+
+## Update-
+
+### Url (PUT)
+
+	/api/bulletin/insert
+
+### Parameters like this-
+
+![alt tag](./documentation_img/update.jpg)
+

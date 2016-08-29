@@ -29,12 +29,14 @@ namespace McpSmyrilLine.api
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get(int start=0,int end=0)
+        public async Task<IActionResult> Get(int currentPageNo = 1,int pageSize =20)
         {
             var bulletins = await _context.Bulletin
                 .Include(u => u.Descriptions)
                 .Include(u => u.Images)
                 .Include(u => u.BulletinTimes)
+                .Skip((currentPageNo-1)*pageSize)
+                .Take(pageSize)
                 .ToArrayAsync();
 
             var response = bulletins.Select(u => new
@@ -42,6 +44,7 @@ namespace McpSmyrilLine.api
                 Id = u.Id,
                 UserId = u.UserId,
                 Title = u.Title,
+                CategoryName = u.CategoryName,
                 Descriptions = u.Descriptions.Select(p => p.Text),
                 Images = u.Images.Select(p => p.Name),
                 SendTimes = u.BulletinTimes.Select(p => p.SendTime),
@@ -54,6 +57,7 @@ namespace McpSmyrilLine.api
         [HttpPost]
         public IActionResult Insert(BulletinViewModel data, ICollection<IFormFile> image)
         {
+            bool is_immediate_bulletin;
             List<Description> bulletinDescription   = new List<Description>();
             List<BulletinTime> bulletinTime         = new List<BulletinTime>();
 
@@ -62,11 +66,21 @@ namespace McpSmyrilLine.api
                 bulletinDescription.Add(new Description { Text = description });
             }
 
+            if(data.send_time.Length>0)
+            {
+                is_immediate_bulletin = false;
+            }
+            else
+            {
+                is_immediate_bulletin = true;
+            }
+
             foreach (var send_time in data.send_time)
             {
                 bulletinTime.Add(new BulletinTime { SendTime = send_time });
             }
-            //bulletinTime.Add(new BulletinTime { Id = 1 });
+            //if "data.send_time" contains 0 element, then the bulletin should be sent immediately,
+            //wtherwise will be sent by times mentioned
 
             //string filename1 = _environment.WebRootPath;
 
@@ -99,6 +113,7 @@ namespace McpSmyrilLine.api
             Bulletin bulletin = new Bulletin {
                 UserId = data.user_id,
                 Title = data.title,
+                CategoryName = data.category_name,
                 Descriptions = bulletinDescription,
                 Images = bulletinImages,
                 BulletinTimes= bulletinTime
@@ -106,14 +121,83 @@ namespace McpSmyrilLine.api
 
             _context.Bulletin.Add(bulletin);
             _context.SaveChanges();
+
+            if(is_immediate_bulletin)
+            {
+                //Broadcust current Bulletin
+            }
             
             return Ok(bulletin);
         }
 
         //[HttpPut]
-        //public Update(int bulletinID)
+        //public IActionResult Update(BulletinViewModel data, ICollection<IFormFile> image)
         //{
+        //    //db.People.RemoveRange(db.People.Where(x => x.State == "CA"));
+        //    //db.SaveChanges();
+        //    using (var db = new BloggingContext())
+        //    {
+        //        var blog = db.Blogs.Include(b => b.Posts).First();
+        //        db.Remove(blog);
+        //        db.SaveChanges();
+        //    }
 
+        //    List<Description> bulletinDescription = new List<Description>();
+        //    List<BulletinTime> bulletinTime = new List<BulletinTime>();
+
+        //    foreach (var description in data.text)
+        //    {
+        //        bulletinDescription.Add(new Description { Text = description });
+        //    }
+
+        //    foreach (var send_time in data.send_time)
+        //    {
+        //        bulletinTime.Add(new BulletinTime { SendTime = send_time });
+        //    }
+        //    //if "data.send_time" contains 0 element, then the bulletin should be sent immediately,
+        //    //wtherwise will be sent by times mentioned
+
+        //    //string filename1 = _environment.WebRootPath;
+
+        //    List<Image> bulletinImages = new List<Image>();
+        //    string path = Directory.GetCurrentDirectory();
+
+        //    foreach (var file in image)
+        //    {
+        //        string fileName = Path.GetFileNameWithoutExtension(file.FileName);
+        //        string extention = Path.GetExtension(file.FileName);
+
+        //        var filename = (data.user_id
+        //                        + "_"
+        //                        + Guid.NewGuid().ToString()
+        //                        + "_"
+        //                        + fileName
+        //                        + extention).Trim('"');
+
+        //        bulletinImages.Add(new Image { Name = filename });
+
+        //        var serverFile = uploadDirectory + $@"/{filename}";
+        //        //file.Length;
+        //        using (FileStream fileStream = System.IO.File.Create(serverFile))
+        //        {
+        //            file.CopyTo(fileStream);
+        //            fileStream.Flush();
+        //        }
+        //    }
+
+        //    Bulletin bulletin = new Bulletin
+        //    {
+        //        UserId          = data.user_id,
+        //        Title           = data.title,
+        //        Descriptions    = bulletinDescription,
+        //        Images          = bulletinImages,
+        //        BulletinTimes   = bulletinTime
+        //    };
+
+        //    _context.Bulletin.Add(bulletin);
+        //    _context.SaveChanges();
+
+        //    return Ok(bulletin);
         //}
 
         //[HttpDelete]
